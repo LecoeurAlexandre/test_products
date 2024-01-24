@@ -1,0 +1,1 @@
+SELECT * FROM virtual_shop.product;
