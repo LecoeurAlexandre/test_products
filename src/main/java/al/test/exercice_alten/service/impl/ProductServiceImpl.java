@@ -3,6 +3,7 @@ package al.test.exercice_alten.service.impl;
 import al.test.exercice_alten.dto.RequestProductDTO;
 import al.test.exercice_alten.dto.ResponseProductDTO;
 import al.test.exercice_alten.entity.ProductEntity;
+import al.test.exercice_alten.exception.ResourceNotFoundException;
 import al.test.exercice_alten.repository.ProductRepository;
 import al.test.exercice_alten.service.ProductService;
 import al.test.exercice_alten.utils.ProductMapper;
@@ -39,7 +40,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseProductDTO getProductById(int id) {
-        return null;
+        ProductEntity product = getProductByIdInDB(id);
+        return productMapper.mapToProductDTO(product);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-    public String defineInventoryStatus(int quantity) {
+    private String defineInventoryStatus(int quantity) {
         if(quantity == 0) {
             return  "OUTOFSTOCK";
         } else if (quantity < 10) {
@@ -60,5 +62,9 @@ public class ProductServiceImpl implements ProductService {
         } else {
             return "INSTOCK";
         }
+    }
+
+    private ProductEntity getProductByIdInDB(int id) {
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
     }
 }
