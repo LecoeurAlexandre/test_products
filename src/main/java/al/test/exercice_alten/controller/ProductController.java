@@ -20,12 +20,18 @@ public class ProductController {
     public ResponseEntity<ResponseProductDTO> createProduct(@RequestBody RequestProductDTO requestProductDTO) {
         return new ResponseEntity<>(productService.createProduct(requestProductDTO), HttpStatus.CREATED);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseProductDTO> getProductById(@PathVariable(name="id") int id) {
+        return ResponseEntity.ok(productService.getProductById(id));
+    }
     @GetMapping()
     public ResponseEntity<List<ResponseProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseProductDTO> getProductById(@PathVariable(name="id") int id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResponseProductDTO> updateProduct(@RequestBody RequestProductDTO requestProductDTO, @PathVariable(name="id") int id) {
+        ResponseProductDTO responseProductDTO = productService.updateProduct(requestProductDTO, id);
+        return new ResponseEntity<>(responseProductDTO, HttpStatus.OK);
     }
 }

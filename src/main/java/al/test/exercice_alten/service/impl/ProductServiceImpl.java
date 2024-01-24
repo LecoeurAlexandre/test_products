@@ -45,13 +45,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseProductDTO updateProduct(RequestProductDTO requestProductDTO, int id) {
-        return null;
+    public ResponseProductDTO updateProduct(RequestProductDTO productDTO, int id) {
+        ProductEntity product = getProductByIdInDB(id);
+        product.setCode(productDTO.getCode());
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setQuantity(productDTO.getQuantity());
+        product.setInventoryStatus(defineInventoryStatus(productDTO.getQuantity()));
+        product.setCategory(productDTO.getCategory());
+        product.setImg(productDTO.getImg());
+        product.setRating(productDTO.getRating());
+        ProductEntity updatedProduct = productRepository.save(product);
+        return productMapper.mapToProductDTO(updatedProduct);
     }
 
     @Override
     public void deleteProductById(int id) {
-
+        ProductEntity product = getProductByIdInDB(id);
+        productRepository.deleteById(product.getId());
     }
 
     private String defineInventoryStatus(int quantity) {
