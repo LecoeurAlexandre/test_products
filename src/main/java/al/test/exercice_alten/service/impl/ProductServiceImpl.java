@@ -9,6 +9,8 @@ import al.test.exercice_alten.utils.ProductMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
@@ -30,7 +32,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ResponseProductDTO> getAllProducts() {
-        return null;
+        List<ProductEntity> products = (List<ProductEntity>) productRepository.findAll();
+        List<ResponseProductDTO> productsDTOList = products.stream().map(product->productMapper.mapToProductDTO(product)).collect(Collectors.toList());
+        return productsDTOList;
     }
 
     @Override
