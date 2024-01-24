@@ -34,4 +34,10 @@ public class ProductController {
         ResponseProductDTO responseProductDTO = productService.updateProduct(requestProductDTO, id);
         return new ResponseEntity<>(responseProductDTO, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable(name="id") int id) {
+        productService.deleteProductById(id);
+        return new ResponseEntity<>("The product has been deleted", HttpStatus.OK);
+    }
 }
