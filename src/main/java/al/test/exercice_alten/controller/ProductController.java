@@ -3,6 +3,7 @@ package al.test.exercice_alten.controller;
 import al.test.exercice_alten.dto.RequestProductDTO;
 import al.test.exercice_alten.dto.ResponseProductDTO;
 import al.test.exercice_alten.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping()
-    public ResponseEntity<ResponseProductDTO> createProduct(@RequestBody RequestProductDTO requestProductDTO) {
+    public ResponseEntity<ResponseProductDTO> createProduct(@Valid @RequestBody RequestProductDTO requestProductDTO) {
         return new ResponseEntity<>(productService.createProduct(requestProductDTO), HttpStatus.CREATED);
     }
     @GetMapping("/{id}")
@@ -30,7 +31,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ResponseProductDTO> updateProduct(@RequestBody RequestProductDTO requestProductDTO, @PathVariable(name="id") int id) {
+    public ResponseEntity<ResponseProductDTO> updateProduct(@Valid @RequestBody RequestProductDTO requestProductDTO, @PathVariable(name="id") int id) {
         ResponseProductDTO responseProductDTO = productService.updateProduct(requestProductDTO, id);
         return new ResponseEntity<>(responseProductDTO, HttpStatus.OK);
     }

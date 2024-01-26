@@ -26,22 +26,20 @@ public class ProductServiceImpl implements ProductService {
     public ResponseProductDTO createProduct(RequestProductDTO requestProductDTO) {
         ProductEntity newProduct = productMapper.mapToProductEntity(requestProductDTO);
         productRepository.save(newProduct);
-        ResponseProductDTO responseProductDTO = productMapper.mapToProductDTO(newProduct);
-        responseProductDTO.setInventoryStatus(defineInventoryStatus(responseProductDTO.getQuantity()));
-        return responseProductDTO;
+        return createDTOWithStatus(newProduct);
     }
 
     @Override
     public List<ResponseProductDTO> getAllProducts() {
         List<ProductEntity> products = (List<ProductEntity>) productRepository.findAll();
-        List<ResponseProductDTO> productsDTOList = products.stream().map(product->productMapper.mapToProductDTO(product)).collect(Collectors.toList());
+        List<ResponseProductDTO> productsDTOList = products.stream().map(product->createDTOWithStatus(product)).collect(Collectors.toList());
         return productsDTOList;
     }
 
     @Override
     public ResponseProductDTO getProductById(int id) {
         ProductEntity product = getProductByIdInDB(id);
-        return productMapper.mapToProductDTO(product);
+        return createDTOWithStatus(product);
     }
 
     @Override
@@ -56,9 +54,7 @@ public class ProductServiceImpl implements ProductService {
         product.setImg(productDTO.getImg());
         product.setRating(productDTO.getRating());
         ProductEntity updatedProduct = productRepository.save(product);
-        ResponseProductDTO responseProductDTO = productMapper.mapToProductDTO(updatedProduct);
-        responseProductDTO.setInventoryStatus(defineInventoryStatus(responseProductDTO.getQuantity()));
-        return responseProductDTO;
+        return createDTOWithStatus(updatedProduct);
     }
 
     @Override
@@ -79,5 +75,11 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductEntity getProductByIdInDB(int id) {
         return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+    }
+
+    private ResponseProductDTO createDTOWithStatus(ProductEntity productEntity) {
+        ResponseProductDTO responseProductDTO = productMapper.mapToProductDTO(productEntity);
+        responseProductDTO.setInventoryStatus(defineInventoryStatus(responseProductDTO.getQuantity()));
+        return responseProductDTO;
     }
 }
