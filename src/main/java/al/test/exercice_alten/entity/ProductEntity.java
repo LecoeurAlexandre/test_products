@@ -35,9 +35,6 @@ public class ProductEntity {
     @Column(name = "product_quantity")
     private int quantity;
 
-    @Column(name = "product_status")
-    private String inventoryStatus;
-
     @Column(name = "product_category")
     private String category;
 

@@ -24,11 +24,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseProductDTO createProduct(RequestProductDTO requestProductDTO) {
-        String inventoryStatus = defineInventoryStatus(requestProductDTO.getQuantity());
         ProductEntity newProduct = productMapper.mapToProductEntity(requestProductDTO);
-        newProduct.setInventoryStatus(inventoryStatus);
         productRepository.save(newProduct);
-        return productMapper.mapToProductDTO(newProduct);
+        ResponseProductDTO responseProductDTO = productMapper.mapToProductDTO(newProduct);
+        responseProductDTO.setInventoryStatus(defineInventoryStatus(responseProductDTO.getQuantity()));
+        return responseProductDTO;
     }
 
     @Override
@@ -52,12 +52,13 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setQuantity(productDTO.getQuantity());
-        product.setInventoryStatus(defineInventoryStatus(productDTO.getQuantity()));
         product.setCategory(productDTO.getCategory());
         product.setImg(productDTO.getImg());
         product.setRating(productDTO.getRating());
         ProductEntity updatedProduct = productRepository.save(product);
-        return productMapper.mapToProductDTO(updatedProduct);
+        ResponseProductDTO responseProductDTO = productMapper.mapToProductDTO(updatedProduct);
+        responseProductDTO.setInventoryStatus(defineInventoryStatus(responseProductDTO.getQuantity()));
+        return responseProductDTO;
     }
 
     @Override
